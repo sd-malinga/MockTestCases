@@ -14,12 +14,18 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
-  const Greeter = await hre.ethers.getContractFactory("Greeter");
-  const greeter = await Greeter.deploy("Hello, Hardhat!");
+    const GameItem = await hre.ethers.getContractFactory("GameItem");
+    const DragonFractionalNFT = await hre.ethers.getContractFactory("contracts/fractional.sol:DragonFractionalNFT");
+    const dutchAuction = await hre.ethers.getContractFactory("contracts/DutchAuction.sol:dutchAuction");
 
-  await greeter.deployed();
+    const gameItem = await GameItem.deploy();
+    await gameItem.deployed();
 
-  console.log("Greeter deployed to:", greeter.address);
+    const fractional = await DragonFractionalNFT.deploy(gameItem.address);
+    await fractional.deployed();
+
+    const dauction = await dutchAuction.deploy(fractional.address);
+    await dauction.deployed();
 }
 
 // We recommend this pattern to be able to use async/await everywhere
